@@ -20,15 +20,20 @@ pipeline {
             steps {
                 echo 'Deploying....'
 
-                withCredentials([sshUserPrivateKey(credentialsId: 'azure_staging_appdeployer', keyFileVariable: 'sshKey', passphraseVariable: '', usernameVariable: 'sshUser')]) {
-                            def remote = [:]
-                            remote.name = 'azure_staging'
-                            remote.host = '52.247.236.99'
-                            remote.user = sshUser
-                            remote.identityFile = sshKey
-                            remote.allowAnyHosts = true
-                            sshCommand remote: remote, command: "nohup /home/appdeployer/slack-integration/deploy.sh  ${env.BUILD_ID} 2>&1"
-                        }
+                script {
+
+                 withCredentials([sshUserPrivateKey(credentialsId: 'azure_staging_appdeployer', keyFileVariable: 'sshKey', passphraseVariable: '', usernameVariable: 'sshUser')]) {
+                                             def remote = [:]
+                                             remote.name = 'azure_staging'
+                                             remote.host = '52.247.236.99'
+                                             remote.user = sshUser
+                                             remote.identityFile = sshKey
+                                             remote.allowAnyHosts = true
+                                             sshCommand remote: remote, command: "nohup /home/appdeployer/slack-integration/deploy.sh  ${env.BUILD_ID} 2>&1"
+                                         }
+                 }
+
+
             }
         }
     }
